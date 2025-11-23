@@ -1,0 +1,68 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>不同类型的CCS选择器</title>
+    <style>
+        h2{
+            color:aqua;
+        }
+        
+        .highlight{
+            background-color: rgb(50, 185, 194);
+        }
+        
+        #header{
+            font-size:35px;
+        }
+        
+        *{
+            font-family:"KaiTi"
+        }
+
+        .father > .son{
+            color:brown;
+        }
+
+        .father p{
+            color:beige;
+            font-size:larger;
+        }
+
+        h3 + p{
+            background-color: red; /*只对下面的p生效 紧跟在这个选择器后的*/
+        }
+
+       #element:hower{
+        background-color: blueviolet;
+       }
+       /*
+       伪元素选择器
+         after before
+       */
+    </style>
+</head>
+<body>
+    <h1>不同类型的CCS选择器</h1>
+    <h2>这是一个元素选择器示例</h2>
+    <h3 class="highlight">这是一个类选择器示例</h3>
+    <h3>这是另一个类选择器示例</h3>
+    <h4 id="header">这是一个id选择器示例</h4>
+    //h3与h4是最常用的
+    
+    <div class="father">
+        <p class="son">这是一个子元素选择器示例</p>
+        <div>
+            <p class="grandson">这是一个后代选择器示例</p>
+        </div>
+    </div>
+     /*这是后代而不是子代 所以不会应用子类选择器的文本样式*/
+    <p>这是一个普通的p标签</p>
+    <h3>这是一个相邻兄弟选择器示例</h3>
+    <p>这是另一个p标签</p>
+    <h3 id="element">这是一个伪类选择器示例</h3>
+</body>
+</html>

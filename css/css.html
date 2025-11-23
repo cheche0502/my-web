@@ -1,0 +1,32 @@
+//css用来定义网页样式和布局的样式表语言
+//通常由选择器，属性，和属性值组成，多个规则可以组合在一起
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=, initial-scale=1.0">
+    <title>CCS 导入方式</title>
+    <link rel="stylesheet" href="C:\Users\车万宇1\Desktop\my web\css\style.css">
+    <style>
+        p {
+            color: blue;
+            font-size: 26px;
+        }
+    </style>//1.内部样式表(如图) 2.内联样式 3.外部样式表（单独写文件）
+    
+    <style>
+        h2{
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <p>这是应用了ccs样式表的p标签</p>
+    <h1 style="color:red;"></h1>
+    <h2>这是使用了内部样式</h2>
+    <h3>这是应用了外部样式</h3>
+    //具有不同的优先级 会发生覆盖 内联＞内部样式>外部样式
+</body>
+</html>

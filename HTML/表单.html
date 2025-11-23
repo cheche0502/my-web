@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form>
+
+      <label>用户名</label>
+    <input type="text" placeholder="请输入用户名">//规定了要显示元素的类型值<br><br>
+      <label for="pwd">密码：</label>//for是用来对应的
+    <input type="text" id="pwd" placeholder="密码"><br><br>//placeholder不是明文
+    <label>性别</label>
+    <input type="radio" name="gender"> 男
+    <input type="radio" name="gender">女
+    <input type="radio" name="gender">其他 //name 是用来单选的
+ 
+    <label>爱好：</label>
+    <input type="checkbox" name="hobby">唱歌
+    <input type="checkbox" name="hobby">跳舞
+    <input type="checkbox" name="hobby">rap
+    <input type="checkbox" name="hobby">篮球<br><br>
+
+    <input type="submit" value="上传">
+    </form>//将你表单中的所有元素包含在form内部即可
+    <form action="#"></form>//表示我们提交按钮时 向何处发送我们的内容 URL #表示不跳转
+</body>
+</html>

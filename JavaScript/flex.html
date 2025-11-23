@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flexbox 属性可视化演示</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            min-height: 80vh;
+        }
+
+        /* 控制面板样式 */
+        .controls {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-right: 1px solid #e9ecef;
+            overflow-y: auto;
+        }
+
+        .control-section {
+            margin-bottom: 2rem;
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .control-section h3 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #3498db;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .control-section h3::before {
+            content: '⚙️';
+            font-size: 1.2rem;
+        }
+
+        .property-group {
+            margin-bottom: 1rem;
+        }
+
+        .property-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #495057;
+        }
+
+        .btn-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 0.5rem;
+        }
+
+        .btn {
+            padding: 0.6rem 1rem;
+            border: 2px solid #e9ecef;
+            background: white;
+            color: #495057;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .btn:hover {
+            border-color: #3498db;
+            transform: translateY(-2px);
+        }
+
+        .btn.active {
+            background: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+
+        /* 演示区域样式 */
+        .demo-area {
+            padding: 2rem;
+            background: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .demo-container {
+            flex: 1;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .demo-title {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #2c3e50;
+        }
+
+        .flex-container {
+            flex: 1;
+            border: 3px dashed #3498db;
+            border-radius: 8px;
+            padding: 1rem;
+            background: linear-gradient(45deg, #f8f9fa 25%, transparent 25%), 
+                        linear-gradient(-45deg, #f8f9fa 25%, transparent 25%), 
+                        linear-gradient(45deg, transparent 75%, #f8f9fa 75%), 
+                        linear-gradient(-45deg, transparent 75%, #f8f9fa 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+            display: flex;
+            gap: 10px;
+            min-height: 400px;
+            transition: all 0.3s ease;
+        }
+
+        .flex-item {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            min-width: 80px;
+            min-height: 60px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+            position: relative;
+        }
+
+        .flex-item::before {
+            content: attr(data-number);
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+
+        .flex-item:nth-child(2) {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+
+        .flex-item:nth-child(3) {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+        }
+
+        .flex-item:nth-child(4) {
+            background: linear-gradient(135deg, #f39c12, #d35400);
+        }
+
+        .flex-item:nth-child(5) {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+        }
+
+        .code-display {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 1.5rem;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin-top: 1rem;
+            overflow-x: auto;
+        }
+
+        .code-display code {
+            display: block;
+            white-space: pre;
+            line-height: 1.5;
+        }
+
+        .property-highlight {
+            color: #3498db;
+            font-weight: bold;
+        }
+
+        .value-highlight {
+            color: #2ecc71;
+        }
+
+        .reset-btn {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+            font-weight: bold;
+        }
+
+        .reset-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(231, 76, 60, 0.3);
+        }
+
+        .axis-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #ecf0f1;
+            border-radius: 6px;
+        }
+
+        .axis {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .main-axis { color: #e74c3c; }
+        .cross-axis { color: #3498db; }
+
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .controls {
+                border-right: none;
+                border-bottom: 1px solid #e9ecef;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎯 Flexbox 属性可视化演示</h1>
+            <p class="subtitle">点击按钮查看不同属性的效果，实时预览 CSS 代码</p>
+        </header>
+
+        <div class="main-content">
+            <!-- 控制面板 -->
+            <div class="controls">
+                <!-- 容器属性 -->
+                <div class="control-section">
+                    <h3>📦 容器属性</h3>
+                    
+                    <div class="property-group">
+                        <label>flex-direction</label>
+                        <div class="btn-group">
+                            <button class="btn" data-property="flex-direction" data-value="row">row</button>
+                            <button class="btn" data-property="flex-direction" data-value="row-reverse">row-reverse</button>
+                            <button class="btn" data-property="flex-direction" data-value="column">column</button>
+                            <button class="btn" data-property="flex-direction" data-value="column-reverse">column-reverse</button>
+                        </div>
+                    </div>
+
+                    <div class="property-group">
+                        <label>flex-wrap</label>
+                        <div class="btn-group">
+                            <button class="btn" data-property="flex-wrap" data-value="nowrap">nowrap</button>
+                            <button class="btn" data-property="flex-wrap" data-value="wrap">wrap</button>
+                            <button class="btn" data-property="flex-wrap" data-value="wrap-reverse">wrap-reverse</button>
+                        </div>
+                    </div>
+
+                    <div class="property-group">
+                        <label>justify-content</label>
+                        <div class="btn-group">
+                            <button class="btn" data-property="justify-content" data-value="flex-start">flex-start</button>
+                            <button class="btn" data-property="justify-content" data-value="flex-end">flex-end</button>
+                            <button class="btn" data-property="justify-content" data-value="center">center</button>
+                            <button class="btn" data-property="justify-content" data-value="space-between">space-between</button>
+                            <button class="btn" data-property="justify-content" data-value="space-around">space-around</button>
+                            <button class="btn" data-property="justify-content" data-value="space-evenly">space-evenly</button>
+                        </div>
+                    </div>
+
+                    <div class="property-group">
+                        <label>align-items</label>
+                        <div class="btn-group">
+                            <button class="btn" data-property="align-items" data-value="stretch">stretch</button>
+                            <button class="btn" data-property="align-items" data-value="flex-start">flex-start</button>
+                            <button class="btn" data-property="align-items" data-value="flex-end">flex-end</button>
+                            <button class="btn" data-property="align-items" data-value="center">center</button>
+                            <button class="btn" data-property="align-items" data-value="baseline">baseline</button>
+                        </div>
+                    </div>
+
+                    <div class="property-group">
+                        <label>align-content</label>
+                        <div class="btn-group">
+                            <button class="btn" data-property="align-content" data-value="stretch">stretch</button>
+                            <button class="btn" data-property="align-content" data-value="flex-start">flex-start</button>
+                            <button class="btn" data-property="align-content" data-value="flex-end">flex-end</button>
+                            <button class="btn" data-property="align-content" data-value="center">center</button>
+                            <button class="btn" data-property="align-content" data-value="space-between">space-between</button>
+                            <button class="btn" data-property="align-content" data-value="space-around">space-around</button>
+                        </div>
+                    </div>
+
+                    <div class="property-group">
+                        <label>gap</label>
+                        <div class="btn-group">
+                            <button class="btn" data-property="gap" data-value="0">0</button>
+                            <button class="btn" data-property="gap" data-value="10px">10px</button>
+                            <button class="btn" data-property="gap" data-value="20px">20px</button>
+                            <button class="btn" data-property="gap" data-value="30px">30px</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 项目属性 -->
+                <div class="control-section">
+                    <h3>🎯 项目属性</h3>
+                    
+                    <div class="property-group">
+                        <label>order (项目1)</label>
+                        <div class="btn-group">
+                            <button class="btn" data-property="order" data-value="-1" data-target="1">-1</button>
+                            <button class="btn" data-property="order" data-value="0" data-target="1">0</button>
+                            <button class="btn" data-property="order" data-value="1" data-target="1">1</button>
+                            <button class="btn" data-property="order" data-value="2" data-target="1">2</button>
+                        </div>
+                    </div>
+
+                    <div class="property-group">
+                        <label>flex-grow (项目2)</label>
+                        <div class="btn-group">
+                            <button class="btn" data-property="flex-grow" data-value="0" data-target="2">0</button>
+                            <button class="btn" data-property="flex-grow" data-value="1" data-target="2">1</button>
+                            <button class="btn" data-property="flex-grow" data-value="2" data-target="2">2</button>
+                            <button class="btn" data-property="flex-grow" data-value="3" data-target="2">3</button>
+                        </div>
+                    </div>
+
+                    <div class="property-group">
+                        <label>flex-shrink (项目3)</label>
+                        <div class="btn-group">
+                            <button class="btn" data-property="flex-shrink" data-value="0" data-target="3">0</button>
+                            <button class="btn" data-property="flex-shrink" data-value="1" data-target="3">1</button>
+                            <button class="btn" data-property="flex-shrink" data-value="2" data-target="3">2</button>
+                        </div>
+                    </div>
+
+                    <div class="property-group">
+                        <label>align-self (项目4)</label>
+                        <div class="btn-group">
+                            <button class="btn" data-property="align-self" data-value="auto" data-target="4">auto</button>
+                            <button class="btn" data-property="align-self" data-value="flex-start" data-target="4">flex-start</button>
+                            <button class="btn" data-property="align-self" data-value="flex-end" data-target="4">flex-end</button>
+                            <button class="btn" data-property="align-self" data-value="center" data-target="4">center</button>
+                            <button class="btn" data-property="align-self" data-value="stretch" data-target="4">stretch</button>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="reset-btn" id="resetAll">🔄 重置所有属性</button>
+            </div>
+
+            <!-- 演示区域 -->
+            <div class="demo-area">
+                <div class="demo-container">
+                    <h2 class="demo-title">Flexbox 演示区域</h2>
+                    
+                    <div class="axis-indicator">
+                        <div class="axis main-axis">
+                            <span>⬌</span> 主轴方向
+                        </div>
+                        <div class="axis cross-axis">
+                            <span>⬍</span> 交叉轴方向
+                        </div>
+                    </div>
+
+                    <div class="flex-container" id="flexContainer">
+                        <div class="flex-item" data-number="1">项目 1</div>
+                        <div class="flex-item" data-number="2">项目 2</div>
+                        <div class="flex-item" data-number="3">项目 3</div>
+                        <div class="flex-item" data-number="4">项目 4</div>
+                        <div class="flex-item" data-number="5">项目 5</div>
+                    </div>
+
+                    <div class="code-display">
+                        <code id="cssCode">.flex-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: stretch;
+    align-content: stretch;
+    gap: 0;
+}</code>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 初始化状态
+        const initialState = {
+            'flex-direction': 'row',
+            'flex-wrap': 'nowrap',
+            'justify-content': 'flex-start',
+            'align-items': 'stretch',
+            'align-content': 'stretch',
+            'gap': '0'
+        };
+
+        const itemStates = {
+            1: { 'order': '0' },
+            2: { 'flex-grow': '0' },
+            3: { 'flex-shrink': '1' },
+            4: { 'align-self': 'auto' }
+        };
+
+        // 获取DOM元素
+        const flexContainer = document.getElementById('flexContainer');
+        const cssCode = document.getElementById('cssCode');
+        const resetBtn = document.getElementById('resetAll');
+
+        // 更新CSS代码显示
+        function updateCSSCode() {
+            const containerStyles = `
+.flex-container {
+    display: flex;
+    flex-direction: ${initialState['flex-direction']};
+    flex-wrap: ${initialState['flex-wrap']};
+    justify-content: ${initialState['justify-content']};
+    align-items: ${initialState['align-items']};
+    align-content: ${initialState['align-content']};
+    gap: ${initialState['gap']};
+}`;
+
+            const itemStyles = Object.keys(itemStates).map(itemId => {
+                const styles = itemStates[itemId];
+                return Object.keys(styles).map(prop => 
+                    `.flex-item:nth-child(${itemId}) { ${prop}: ${styles[prop]}; }`
+                ).join('\n');
+            }).join('\n');
+
+            cssCode.textContent = containerStyles + (itemStyles ? '\n\n' + itemStyles : '');
+        }
+
+        // 应用容器样式
+        function applyContainerStyles() {
+            Object.keys(initialState).forEach(property => {
+                flexContainer.style[property] = initialState[property];
+            });
+        }
+
+        // 应用项目样式
+        function applyItemStyles() {
+            Object.keys(itemStates).forEach(itemId => {
+                const item = document.querySelector(`.flex-item:nth-child(${itemId})`);
+                if (item) {
+                    Object.keys(itemStates[itemId]).forEach(property => {
+                        item.style[property] = itemStates[itemId][property];
+                    });
+                }
+            });
+        }
+
+        // 处理容器属性按钮点击
+        document.querySelectorAll('.btn[data-property]').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const property = this.dataset.property;
+                const value = this.dataset.value;
+                const target = this.dataset.target;
+
+                // 移除同组按钮的active类
+                const siblingBtns = this.parentElement.querySelectorAll('.btn');
+                siblingBtns.forEach(b => b.classList.remove('active'));
+                
+                // 添加active类到当前按钮
+                this.classList.add('active');
+
+                if (target) {
+                    // 项目属性
+                    if (!itemStates[target]) itemStates[target] = {};
+                    itemStates[target][property] = value;
+                } else {
+                    // 容器属性
+                    initialState[property] = value;
+                }
+
+                applyContainerStyles();
+                applyItemStyles();
+                updateCSSCode();
+            });
+        });
+
+        // 重置所有属性
+        resetBtn.addEventListener('click', function() {
+            // 重置容器状态
+            Object.keys(initialState).forEach(key => {
+                initialState[key] = initialState[key]; // 保持初始值
+            });
+
+            // 重置项目状态
+            Object.keys(itemStates).forEach(itemId => {
+                if (itemId === '1') itemStates[itemId]['order'] = '0';
+                if (itemId === '2') itemStates[itemId]['flex-grow'] = '0';
+                if (itemId === '3') itemStates[itemId]['flex-shrink'] = '1';
+                if (itemId === '4') itemStates[itemId]['align-self'] = 'auto';
+            });
+
+            // 移除所有按钮的active状态
+            document.querySelectorAll('.btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // 激活默认按钮
+            document.querySelectorAll('.btn[data-value="row"]').forEach(btn => btn.classList.add('active'));
+            document.querySelectorAll('.btn[data-value="nowrap"]').forEach(btn => btn.classList.add('active'));
+            document.querySelectorAll('.btn[data-value="flex-start"]').forEach(btn => btn.classList.add('active'));
+            document.querySelectorAll('.btn[data-value="stretch"]').forEach(btn => btn.classList.add('active'));
+            document.querySelectorAll('.btn[data-value="0"]').forEach(btn => btn.classList.add('active'));
+
+            applyContainerStyles();
+            applyItemStyles();
+            updateCSSCode();
+        });
+
+        // 初始化
+        applyContainerStyles();
+        applyItemStyles();
+        updateCSSCode();
+
+        // 激活默认按钮
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.btn[data-value="row"]').forEach(btn => btn.classList.add('active'));
+            document.querySelectorAll('.btn[data-value="nowrap"]').forEach(btn => btn.classList.add('active'));
+            document.querySelectorAll('.btn[data-value="flex-start"]').forEach(btn => btn.classList.add('active'));
+            document.querySelectorAll('.btn[data-value="stretch"]').forEach(btn => btn.classList.add('active'));
+            document.querySelectorAll('.btn[data-value="0"]').forEach(btn => btn.classList.add('active'));
+        });
+    </script>
+</body>
+</html>

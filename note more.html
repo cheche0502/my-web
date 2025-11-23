@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>多用户学习笔记管理系统</title>
+    <style>
+        :root {
+            --primary-color: #4a6fa5;
+            --secondary-color: #6b8cbc;
+            --accent-color: #ff7e5f;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f0f2f5;
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 0;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .main-content {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+        }
+        
+        .upload-section {
+            flex: 1;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+        }
+        
+        .notes-section {
+            flex: 2;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+        }
+        
+        .user-section {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--light-color);
+            padding-bottom: 10px;
+        }
+        
+        .upload-area {
+            border: 2px dashed var(--secondary-color);
+            border-radius: 8px;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-bottom: 20px;
+            background-color: rgba(107, 140, 188, 0.05);
+        }
+        
+        .upload-area:hover {
+            background-color: rgba(107, 140, 188, 0.1);
+            border-color: var(--primary-color);
+        }
+        
+        .upload-icon {
+            font-size: 48px;
+            color: var(--secondary-color);
+            margin-bottom: 15px;
+        }
+        
+        .upload-text {
+            margin-bottom: 15px;
+        }
+        
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: var(--transition);
+            display: inline-block;
+        }
+        
+        .btn:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+        
+        .btn-accent {
+            background-color: var(--accent-color);
+        }
+        
+        .btn-accent:hover {
+            background-color: #ff9a7a;
+        }
+        
+        .preview-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .preview-image {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            margin-bottom: 15px;
+        }
+        
+        .note-form {
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+        
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(74, 111, 165, 0.2);
+        }
+        
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+        
+        .notes-list {
+            margin-top: 30px;
+        }
+        
+        .note-card {
+            background: var(--light-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .note-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .note-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .note-title {
+            font-size: 1.3rem;
+            color: var(--primary-color);
+        }
+        
+        .note-date {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        .note-image {
+            max-width: 100%;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            max-height: 200px;
+            object-fit: cover;
+        }
+        
+        .note-content {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        
+        .note-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 0.9rem;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #6c757d;
+        }
+        
+        .empty-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+        
+        .tag {
+            display: inline-block;
+            background-color: #e9ecef;
+            color: #495057;
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+        
+        .tag-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .tag-option {
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 15px;
+            background-color: #e9ecef;
+            transition: var(--transition);
+        }
+        
+        .tag-option.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .user-list {
+            margin-top: 20px;
+        }
+        
+        .user-card {
+            background: var(--light-color);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .user-name {
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        .switch-user-btn {
+            background-color: var(--secondary-color);
+        }
+        
+        .current-user {
+            background-color: rgba(74, 111, 165, 0.1);
+            border-left: 4px solid var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>多用户学习笔记管理系统</h1>
+            <p class="subtitle">每个用户都有自己的独立笔记空间</p>
+        </header>
+        
+        <!-- 用户管理区域 -->
+        <section class="user-section">
+            <h2 class="section-title">用户管理</h2>
+            <div class="form-group">
+                <label for="userName">用户名</label>
+                <input type="text" id="userName" placeholder="请输入您的用户名">
+            </div>
+            <button class="btn" id="createUserBtn">创建/切换到用户</button>
+            
+            <div class="user-list" id="userList">
+                <!-- 用户列表将通过JavaScript动态添加 -->
+            </div>
+        </section>
+        
+        <div class="main-content">
+            <section class="upload-section">
+                <h2 class="section-title">上传学习资料</h2>
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">📷</div>
+                    <p class="upload-text">点击或拖拽图片到此处上传</p>
+                    <p class="upload-hint">支持 JPG, PNG 格式，最大 5MB</p>
+                </div>
+                <input type="file" id="fileInput" accept="image/*" style="display: none;">
+                
+                <div class="preview-container" id="previewContainer" style="display: none;">
+                    <img id="previewImage" class="preview-image" src="" alt="预览图片">
+                    <button class="btn btn-accent" id="removeImageBtn">移除图片</button>
+                </div>
+                
+                <div class="tag-selector">
+                    <div class="tag-option active" data-tag="全部">全部</div>
+                    <div class="tag-option" data-tag="数学">数学</div>
+                    <div class="tag-option" data-tag="编程">编程</div>
+                    <div class="tag-option" data-tag="英语">英语</div>
+                    <div class="tag-option" data-tag="物理">物理</div>
+                    <div class="tag-option" data-tag="其他">其他</div>
+                </div>
+            </section>
+            
+            <section class="notes-section">
+                <h2 class="section-title">添加学习笔记</h2>
+                <div class="note-form">
+                    <div class="form-group">
+                        <label for="noteTitle">笔记标题</label>
+                        <input type="text" id="noteTitle" placeholder="请输入笔记标题">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="noteContent">笔记内容</label>
+                        <textarea id="noteContent" placeholder="请输入笔记内容..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="noteTags">标签（用逗号分隔）</label>
+                        <input type="text" id="noteTags" placeholder="例如：数学, 公式, 重要">
+                    </div>
+                    
+                    <button class="btn" id="saveNoteBtn">保存笔记</button>
+                </div>
+                
+                <h2 class="section-title">我的笔记</h2>
+                <div class="notes-list" id="notesList">
+                    <!-- 笔记卡片将通过JavaScript动态添加 -->
+                    <div class="empty-state">
+                        <div class="empty-icon">📝</div>
+                        <p>暂无笔记，请添加您的第一条学习笔记</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+        
+        <footer>
+            <p>多用户学习笔记管理系统 &copy; 2023 | 当前用户: <span id="currentUserDisplay">未选择</span></p>
+        </footer>
+    </div>
+
+    <script>
+        // 获取DOM元素
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const previewContainer = document.getElementById('previewContainer');
+        const previewImage = document.getElementById('previewImage');
+        const removeImageBtn = document.getElementById('removeImageBtn');
+        const saveNoteBtn = document.getElementById('saveNoteBtn');
+        const noteTitle = document.getElementById('noteTitle');
+        const noteContent = document.getElementById('noteContent');
+        const noteTags = document.getElementById('noteTags');
+        const notesList = document.getElementById('notesList');
+        const tagOptions = document.querySelectorAll('.tag-option');
+        const userNameInput = document.getElementById('userName');
+        const createUserBtn = document.getElementById('createUserBtn');
+        const userList = document.getElementById('userList');
+        const currentUserDisplay = document.getElementById('currentUserDisplay');
+        
+        // 当前上传的图片（Base64格式）
+        let currentImage = null;
+        
+        // 用户相关变量
+        let currentUser = localStorage.getItem('currentUser') || null;
+        let users = JSON.parse(localStorage.getItem('noteUsers')) || {};
+        
+        // 当前选中的标签
+        let currentTag = '全部';
+        
+        // 初始化用户界面
+        function initUserInterface() {
+            if (currentUser) {
+                currentUserDisplay.textContent = currentUser;
+                renderNotes(); // 显示当前用户的笔记
+            } else {
+                currentUserDisplay.textContent = '未选择';
+            }
+            renderUserList();
+        }
+        
+        // 上传区域点击事件
+        uploadArea.addEventListener('click', () => {
+            fileInput.click();
+        });
+        
+        // 拖放功能
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.style.backgroundColor = 'rgba(107, 140, 188, 0.15)';
+        });
+        
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.style.backgroundColor = 'rgba(107, 140, 188, 0.05)';
+        });
+        
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.style.backgroundColor = 'rgba(107, 140, 188, 0.05)';
+            
+            if (e.dataTransfer.files.length > 0) {
+                const file = e.dataTransfer.files[0];
+                if (file.type.startsWith('image/')) {
+                    handleImageUpload(file);
+                } else {
+                    alert('请上传图片文件！');
+                }
+            }
+        });
+        
+        // 文件选择事件
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                const file = e.target.files[0];
+                handleImageUpload(file);
+            }
+        });
+        
+        // 处理图片上传
+        function handleImageUpload(file) {
+            if (file.size > 5 * 1024 * 1024) {
+                alert('图片大小不能超过5MB！');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                currentImage = e.target.result;
+                previewImage.src = currentImage;
+                previewContainer.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        // 移除图片
+        removeImageBtn.addEventListener('click', () => {
+            currentImage = null;
+            previewContainer.style.display = 'none';
+            fileInput.value = '';
+        });
+        
+        // 标签选择
+        tagOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                tagOptions.forEach(opt => opt.classList.remove('active'));
+                option.classList.add('active');
+                currentTag = option.getAttribute('data-tag');
+                renderNotes();
+            });
+        });
+        
+        // 创建/切换到用户
+        createUserBtn.addEventListener('click', () => {
+            const userName = userNameInput.value.trim();
+            
+            if (!userName) {
+                alert('请输入用户名！');
+                return;
+            }
+            
+            // 如果用户不存在，创建新用户
+            if (!users[userName]) {
+                users[userName] = {
+                    createdAt: new Date().toISOString(),
+                    notes: []
+                };
+                saveUsersToStorage();
+            }
+            
+            // 切换到该用户
+            switchToUser(userName);
+            userNameInput.value = '';
+        });
+        
+        // 切换到指定用户
+        function switchToUser(userName) {
+            currentUser = userName;
+            localStorage.setItem('currentUser', currentUser);
+            currentUserDisplay.textContent = currentUser;
+            renderUserList();
+            renderNotes();
+        }
+        
+        // 渲染用户列表
+        function renderUserList() {
+            userList.innerHTML = '';
+            
+            Object.keys(users).forEach(userName => {
+                const userCard = document.createElement('div');
+                userCard.className = `user-card ${userName === currentUser ? 'current-user' : ''}`;
+                
+                userCard.innerHTML = `
+                    <div>
+                        <span class="user-name">${userName}</span>
+                        <div>创建于: ${new Date(users[userName].createdAt).toLocaleDateString()}</div>
+                        <div>笔记数量: ${users[userName].notes.length}</div>
+                    </div>
+                    <button class="btn btn-small switch-user-btn" data-user="${userName}">
+                        ${userName === currentUser ? '当前用户' : '切换到该用户'}
+                    </button>
+                `;
+                
+                userList.appendChild(userCard);
+            });
+            
+            // 添加切换用户事件监听
+            document.querySelectorAll('.switch-user-btn').forEach(btn => {
+                if (!btn.textContent.includes('当前用户')) {
+                    btn.addEventListener('click', (e) => {
+                        const targetUser = e.target.getAttribute('data-user');
+                        switchToUser(targetUser);
+                    });
+                }
+            });
+        }
+        
+        // 保存用户数据到本地存储
+        function saveUsersToStorage() {
+            localStorage.setItem('noteUsers', JSON.stringify(users));
+        }
+        
+        // 保存笔记
+        saveNoteBtn.addEventListener('click', () => {
+            if (!currentUser) {
+                alert('请先选择或创建用户！');
+                return;
+            }
+            
+            const title = noteTitle.value.trim();
+            const content = noteContent.value.trim();
+            const tags = noteTags.value.split(',').map(tag => tag.trim()).filter(tag => tag);
+            
+            if (!title) {
+                alert('请输入笔记标题！');
+                return;
+            }
+            
+            if (!content) {
+                alert('请输入笔记内容！');
+                return;
+            }
+            
+            const newNote = {
+                id: Date.now(),
+                title,
+                content,
+                tags,
+                image: currentImage,
+                date: new Date().toLocaleDateString('zh-CN')
+            };
+            
+            users[currentUser].notes.unshift(newNote);
+            saveUsersToStorage();
+            renderNotes();
+            
+            // 重置表单
+            noteTitle.value = '';
+            noteContent.value = '';
+            noteTags.value = '';
+            currentImage = null;
+            previewContainer.style.display = 'none';
+            fileInput.value = '';
+            
+            alert('笔记保存成功！');
+        });
+        
+        // 渲染笔记列表
+        function renderNotes() {
+            notesList.innerHTML = '';
+            
+            if (!currentUser) {
+                notesList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">👤</div>
+                        <p>请先选择或创建用户</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let userNotes = users[currentUser].notes;
+            
+            // 过滤笔记
+            let filteredNotes = userNotes;
+            if (currentTag !== '全部') {
+                filteredNotes = userNotes.filter(note => 
+                    note.tags.includes(currentTag)
+                );
+            }
+            
+            if (filteredNotes.length === 0) {
+                notesList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">📝</div>
+                        <p>暂无相关笔记</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            filteredNotes.forEach(note => {
+                const noteCard = document.createElement('div');
+                noteCard.className = 'note-card';
+                
+                const tagsHtml = note.tags.map(tag => `<span class="tag">${tag}</span>`).join('');
+                
+                noteCard.innerHTML = `
+                    <div class="note-header">
+                        <h3 class="note-title">${note.title}</h3>
+                        <span class="note-date">${note.date}</span>
+                    </div>
+                    ${note.image ? `<img src="${note.image}" class="note-image" alt="笔记图片">` : ''}
+                    <div class="note-content">${note.content}</div>
+                    <div class="note-tags">${tagsHtml}</div>
+                    <div class="note-actions">
+                        <button class="btn btn-small edit-btn" data-id="${note.id}">编辑</button>
+                        <button class="btn btn-small btn-accent delete-btn" data-id="${note.id}">删除</button>
+                    </div>
+                `;
+                
+                notesList.appendChild(noteCard);
+            });
+            
+            // 添加删除和编辑事件监听
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const id = parseInt(e.target.getAttribute('data-id'));
+                    if (confirm('确定要删除这条笔记吗？')) {
+                        users[currentUser].notes = users[currentUser].notes.filter(note => note.id !== id);
+                        saveUsersToStorage();
+                        renderNotes();
+                    }
+                });
+            });
+            
+            document.querySelectorAll('.edit-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const id = parseInt(e.target.getAttribute('data-id'));
+                    const note = users[currentUser].notes.find(note => note.id === id);
+                    
+                    if (note) {
+                        noteTitle.value = note.title;
+                        noteContent.value = note.content;
+                        noteTags.value = note.tags.join(', ');
+                        
+                        if (note.image) {
+                            currentImage = note.image;
+                            previewImage.src = currentImage;
+                            previewContainer.style.display = 'block';
+                        }
+                        
+                        // 删除原笔记
+                        users[currentUser].notes = users[currentUser].notes.filter(n => n.id !== id);
+                        saveUsersToStorage();
+                        renderNotes();
+                    }
+                });
+            });
+        }
+        
+        // 初始化页面
+        initUserInterface();
+    </script>
+</body>
+</html>

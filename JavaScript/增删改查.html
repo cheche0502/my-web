@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>增删改查</title>
+    <style>
+        table{
+            width : 100%;
+            margin-top : 20px;
+            border-collapse : collapse;
+        }
+
+        th, td{
+            border: 1px solid gray;
+            text-align: center;
+            padding: 8px;
+        }
+        
+        
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center">表格的增删改查</h1>
+    <button onclick="addrow()">新增数据</button>
+    <table id="table">
+    <tr>
+        <th>姓名</th>
+        <th>联系方式</th>
+        <th>操作</th>
+    </tr>
+      <tr> 
+        <td>车万宇</td>
+        <td>13165002985</td>
+        <td>
+            <button onclick="editrow(this)">编辑</button>
+            <button onclick="deleterow(this)">删除</button>
+        </td>
+    </tr>
+    </table>
+
+</body>
+</html>
+  <script>
+        //新增数据函数
+        function addrow(){
+            var table = document.getElementById('table');
+            var length = table.rows.length;
+            
+            //插入行节点
+            var newRow = table.insertRow(length);
+            
+            //创建单元格
+            var cell1 = newRow.insertCell(0);
+            var cell2 = newRow.insertCell(1);
+            var cell3 = newRow.insertCell(2);
+            
+            cell1.innerHTML = "新用户";
+            cell2.innerHTML = "无联系方式";
+            cell3.innerHTML = '<button onclick="editrow(this)">编辑</button> <button onclick="deleterow(this)">删除</button>';
+        }
+        //编辑数据函数
+        function editrow(button){
+            var row = button.parentNode.parentNode;
+            var nameCell = row.cells[0];
+            var contactCell = row.cells[1];
+            
+            var newName = prompt("请输入姓名:", nameCell.innerHTML);
+            var newContact = prompt("请输入联系方式:", contactCell.innerHTML);
+            
+            if(newName !== null && newContact !== null){
+                nameCell.innerHTML = newName;
+                contactCell.innerHTML = newContact;
+            }
+        }
+        //删除数据函数
+        function deleterow(button){
+            var row = button.parentNode.parentNode;
+            var table = document.getElementById('table');
+            
+            if(confirm("确定要删除这行数据吗？")){
+                table.deleteRow(row.rowIndex);
+            }
+        }
+    </script>
+    </table>
+</body>
+</html>
